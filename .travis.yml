@@ -57,9 +57,9 @@ before_install:
   - git clone --depth=100 --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git server
   - cd server
   - git status
-  - git pull --depth=100 --no-commit https://github.com/TrinityCore/TrinityCore.git 3.3.5
-  - git add -A
-  - git commit -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]"
+  - git remote add https://github.com/TrinityCore/TrinityCore.git Trinity
+  - git fetch --depth=100 Trinity 3.3.5
+  - git merge -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]" Trinity 3.3.5
   - git submodule update --init --recursive
   - git status
   - git config user.email "rochet2@post.com" && git config user.name "Rochet2"
