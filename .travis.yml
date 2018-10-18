@@ -31,6 +31,8 @@ addons:
 services:
   - mysql
 
+cache: ccache
+
 env:
 - BRANCH=3.3.5
 - BRANCH=transmog
@@ -43,11 +45,23 @@ env:
 - BRANCH=objscale
 - BRANCH=gomove
 
+# after_success:
+#   - git push https://${GITHUB_TOKEN}@github.com/Rochet2/TrinityCore.git HEAD:${BRANCH}
+
 before_install:
+  - export CXX="ccache clang++"
+  - export CC="ccache clang"
+  - export CCACHE_CPP2="true"
+  - which g++ gcc clang clang++ cc c++
+  - ccache --show-stats
   - git clone --depth=100 --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git server
   - cd server
-  - git pull --depth=100 https://github.com/TrinityCore/TrinityCore.git 3.3.5
+  - git status
+  - git pull --depth=100 --no-commit https://github.com/TrinityCore/TrinityCore.git 3.3.5
+  - git add -A
+  - git commit -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]"
   - git submodule update --init --recursive
+  - git status
   - git config user.email "rochet2@post.com" && git config user.name "Rochet2"
   - git tag -a -m "Travis build" init
 
@@ -55,7 +69,7 @@ install:
   - mysql -uroot -e 'create database test_mysql;'
   - mkdir bin
   - cd bin
-  - cmake ../ -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install
+  - cmake ../ -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=0 -DUSE_SCRIPTPCH=0 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install
   - cd ..
   - chmod +x contrib/check_updates.sh
 
