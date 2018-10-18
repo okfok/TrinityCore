@@ -31,16 +31,16 @@ services:
 cache: ccache
 
 env:
-- BRANCH=3.3.5
-- BRANCH=transmog
-- BRANCH=transmogvendor
-- BRANCH=reforging
-- BRANCH=multivendor
-- BRANCH=multitrainer
-- BRANCH=playeritemgossip
-- BRANCH=dressnpcs
-- BRANCH=objscale
-- BRANCH=gomove
+  - BRANCH=3.3.5
+  - BRANCH=transmog
+  - BRANCH=transmogvendor
+  - BRANCH=reforging
+  - BRANCH=multivendor
+  - BRANCH=multitrainer
+  - BRANCH=playeritemgossip
+  - BRANCH=dressnpcs
+  - BRANCH=objscale
+  - BRANCH=gomove
 
 after_success:
   - git push https://${GITHUB_TOKEN}@github.com/Rochet2/TrinityCore.git HEAD:${BRANCH}
@@ -59,7 +59,7 @@ before_install:
   - git merge -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]" Trinity/3.3.5
   - git submodule update --init --recursive
   - git status
-  - git config user.email "rochet2@post.com" && git config user.name "Rochet2"
+  - git config user.email "travis@build.bot" && git config user.name "Travis CI"
   - git tag -a -m "Travis build" init
 
 install:
