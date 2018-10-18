@@ -46,7 +46,7 @@ env:
 - BRANCH=gomove
 
 after_success:
-  - git push https://github.com/Rochet2/TrinityCore.git HEAD:${BRANCH}
+  - git push git@github.com:Rochet2/TrinityCore.git HEAD:${BRANCH}
 
 before_install:
   - export CXX="ccache clang++"
