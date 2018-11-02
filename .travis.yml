@@ -28,8 +28,6 @@ addons:
 services:
   - mysql
 
-cache: ccache
-
 env:
   - BRANCH=3.3.5
   - BRANCH=transmog
@@ -42,15 +40,7 @@ env:
   - BRANCH=objscale
   - BRANCH=gomove
 
-after_success:
-  - git push https://${GITHUB_TOKEN}@github.com/Rochet2/TrinityCore.git HEAD:${BRANCH}
-
 before_install:
-  - export CXX="ccache clang++"
-  - export CC="ccache clang"
-  - export CCACHE_CPP2="true"
-  - which g++ gcc clang clang++ cc c++
-  - ccache --show-stats
   - git clone --depth=100 --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git server
   - cd server
   - git status
@@ -79,11 +69,6 @@ script:
   - ./contrib/check_updates.sh characters 3.3.5 characters
   - mysql -utrinity -ptrinity world < sql/base/dev/world_database.sql
   - cat sql/updates/world/3.3.5/*.sql | mysql -utrinity -ptrinity world
-
-  - cat sql/custom/auth/*.sql | mysql -utrinity -ptrinity auth	
-  - cat sql/custom/characters/*.sql | mysql -utrinity -ptrinity characters	
-  - cat sql/custom/world/*.sql | mysql -utrinity -ptrinity world
-
   - mysql -uroot < sql/create/drop_mysql.sql
   - cd bin
   - make -j 4 -k && make install
