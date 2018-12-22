@@ -30,15 +30,15 @@ services:
 
 env:
   - BRANCH=3.3.5
-  - BRANCH=transmog
-  - BRANCH=transmogvendor
-  - BRANCH=reforging
-  - BRANCH=multivendor
-  - BRANCH=multitrainer
-  - BRANCH=playeritemgossip
-  - BRANCH=dressnpcs
-  - BRANCH=objscale
-  - BRANCH=gomove
+  - BRANCH=transmog_3.3.5
+  - BRANCH=transmogvendor_3.3.5
+  - BRANCH=reforging_3.3.5
+  - BRANCH=multivendor_3.3.5
+  - BRANCH=multitrainer_3.3.5
+  - BRANCH=playeritemgossip_3.3.5
+  - BRANCH=dressnpcs_3.3.5
+  - BRANCH=objscale_3.3.5
+  - BRANCH=gomove_3.3.5
 
 before_install:
   - git clone --depth=100 --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git server
