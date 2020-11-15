@@ -12,7 +12,7 @@ jobs:
       matrix:
         branch: [3.3.5, transmog_3.3.5, transmogvendor_3.3.5, reforging_3.3.5, multivendor_3.3.5, multitrainer_3.3.5, playeritemgossip_3.3.5, dressnpcs_3.3.5, objscale_3.3.5, gomove_3.3.5]
         pch: [ON, OFF]
-        fetch_depth: [1000]
+        fetch_depth: [0]
     env:
       BRANCH: ${{ matrix.branch }}
       PCH: ${{ matrix.pch }}
@@ -22,15 +22,17 @@ jobs:
     steps:
 
     - uses: actions/checkout@v2
+      if: matrix.pch == 'NONE'
       with:
         persist-credentials: false
         repository: Rochet2/TrinityCore
         fetch-depth: ${{ matrix.fetch_depth }}
     - name: Merge TC
       run: |
+        git clone --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git .
         git status	
         git remote add Trinity https://github.com/TrinityCore/TrinityCore.git	
-        git fetch --depth=$DEPTH Trinity 3.3.5	
+        git fetch Trinity 3.3.5	
         git merge -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]" Trinity/3.3.5
         git submodule update --init --recursive
         git status
