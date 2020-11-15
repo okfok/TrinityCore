@@ -58,9 +58,16 @@ jobs:
         cd bin/check_install/bin
         ./authserver --version
         ./worldserver --version
-    
+
     - name: Push changes
       if: matrix.pch == 'ON'
+      env:
+        GITHUB_TOKEN: ${{ secrets.FORK_GITHUB_TOKEN }}
+      run: |
+        git push https://${GITHUB_TOKEN}@github.com/Rochet2/TrinityCore.git HEAD:${BRANCH} >/dev/null 2>&1
+    
+    - name: Push changes
+      if: matrix.pch == 'NONE'
       uses: ad-m/github-push-action@b007e7b818e33b04afd056e4c4b57ba917145d7a
       with:
         github_token: ${{ secrets.FORK_GITHUB_TOKEN }}
