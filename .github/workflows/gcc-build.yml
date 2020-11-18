@@ -29,11 +29,11 @@ jobs:
         fetch-depth: ${{ matrix.fetch_depth }}
     - name: Merge TC
       run: |
-        git config user.email "rochet2+ci@post.com" && git config user.name "Rochet2"
         git clone --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git .
-        git status	
-        git remote add Trinity https://github.com/TrinityCore/TrinityCore.git	
-        git fetch Trinity 3.3.5	
+        git status
+        git config user.email "rochet2+ci@post.com" && git config user.name "Rochet2"
+        git remote add Trinity https://github.com/TrinityCore/TrinityCore.git
+        git fetch Trinity 3.3.5
         git merge -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]" Trinity/3.3.5
         git submodule update --init --recursive
         git status
