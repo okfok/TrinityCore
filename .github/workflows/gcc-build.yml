@@ -36,6 +36,8 @@ jobs:
         git merge -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]" Trinity/3.3.5
         git submodule update --init --recursive
         git status
+        git config user.email "rochet2+ci@post.com" && git config user.name "Rochet2"
+        git tag -a -m "CI build" init
 
     - name: Dependencies
       run: |
