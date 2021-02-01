@@ -67,7 +67,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.FORK_GITHUB_TOKEN }}
       run: |
-        git push https://${GITHUB_TOKEN}@github.com/Rochet2/TrinityCore.git HEAD:${BRANCH} >/dev/null 2>&1
+        git push https://${GITHUB_TOKEN}@github.com/Rochet2/TrinityCore.git HEAD:${BRANCH}
     
     - name: Push changes
       if: matrix.pch == 'NONE'
