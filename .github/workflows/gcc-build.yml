@@ -38,6 +38,25 @@ jobs:
         git submodule update --init --recursive
         git status
 
+    - name: Check database
+      run: |
+        # start mysql
+        sudo systemctl start mysql.service
+        # create databases
+        mysql -uroot -proot -e 'create database test_mysql;'
+        mysql -uroot -proot < sql/create/create_mysql.sql
+        mysql -uroot -proot auth < sql/base/auth_database.sql
+        mysql -uroot -proot characters < sql/base/characters_database.sql
+        mysql -uroot -proot world < sql/base/dev/world_database.sql
+        # run updates
+        chmod +x contrib/check_updates.sh
+        ./contrib/check_updates.sh auth 3.3.5 auth localhost
+        ./contrib/check_updates.sh characters 3.3.5 characters localhost
+        cat sql/updates/world/3.3.5/*.sql | mysql -uroot -proot world
+        cat sql/custom/auth/*.sql | mysql -uroot -proot auth
+        cat sql/custom/characters/*.sql | mysql -uroot -proot characters
+        cat sql/custom/world/*.sql | mysql -uroot -proot world
+
     - name: Dependencies
       run: |
         sudo apt-get update && sudo apt-get install -yq libboost-all-dev
@@ -61,23 +80,6 @@ jobs:
         cd bin/check_install/bin
         ./authserver --version
         ./worldserver --version
-    - name: Check database
-      run: |
-        # start mysql
-        sudo systemctl start mysql.service
-        # create databases
-        mysql -uroot -proot -e 'create database test_mysql;'
-        mysql -uroot -proot < sql/create/create_mysql.sql
-        mysql -uroot -proot auth < sql/base/auth_database.sql
-        mysql -uroot -proot characters < sql/base/characters_database.sql
-        mysql -uroot -proot world < sql/base/dev/world_database.sql
-        # run updates
-        ./contrib/check_updates.sh auth 3.3.5 auth localhost
-        ./contrib/check_updates.sh characters 3.3.5 characters localhost
-        cat sql/updates/world/3.3.5/*.sql | mysql -uroot -proot world
-        cat sql/custom/auth/*.sql | mysql -uroot -proot auth	
-        cat sql/custom/characters/*.sql | mysql -uroot -proot characters	
-        cat sql/custom/world/*.sql | mysql -uroot -proot world
 
     - name: Push changes
       if: matrix.pch == 'ON'
