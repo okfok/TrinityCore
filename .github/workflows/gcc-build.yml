@@ -40,24 +40,24 @@ jobs:
 
     - name: Check database
       run: |
-        # start mysql
+        echo "start mysql"
         sudo systemctl start mysql.service
-        # remove user password
+        echo "remove user password"
         mysql -uroot -proot -e 'SET PASSWORD FOR root@localhost="";'
-        # create databases
+        echo "create databases"
         mysql -uroot -e 'create database test_mysql;'
         mysql -uroot < sql/create/create_mysql.sql
         mysql -uroot auth < sql/base/auth_database.sql
         mysql -uroot characters < sql/base/characters_database.sql
         mysql -uroot world < sql/base/dev/world_database.sql
-        # run updates
+        echo "run updates"
         chmod +x contrib/check_updates.sh
         ./contrib/check_updates.sh auth 3.3.5 auth localhost
         ./contrib/check_updates.sh characters 3.3.5 characters localhost
         cat sql/updates/world/3.3.5/*.sql | mysql -uroot world
-        cat sql/custom/auth/*.sql | mysql -uroot auth
-        cat sql/custom/characters/*.sql | mysql -uroot characters
-        cat sql/custom/world/*.sql | mysql -uroot world
+        echo "custom/auth"; cat sql/custom/auth/*.sql | mysql -uroot auth
+        echo "custom/characters"; cat sql/custom/characters/*.sql | mysql -uroot characters
+        echo "custom/world"; cat sql/custom/world/*.sql | mysql -uroot world
 
     - name: Dependencies
       run: |
