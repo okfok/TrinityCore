@@ -42,20 +42,22 @@ jobs:
       run: |
         # start mysql
         sudo systemctl start mysql.service
+        # remove user password
+        mysql -uroot -proot -e 'SET PASSWORD FOR root@localhost="";'
         # create databases
-        mysql -uroot -proot -e 'create database test_mysql;'
-        mysql -uroot -proot < sql/create/create_mysql.sql
-        mysql -uroot -proot auth < sql/base/auth_database.sql
-        mysql -uroot -proot characters < sql/base/characters_database.sql
-        mysql -uroot -proot world < sql/base/dev/world_database.sql
+        mysql -uroot -e 'create database test_mysql;'
+        mysql -uroot < sql/create/create_mysql.sql
+        mysql -uroot auth < sql/base/auth_database.sql
+        mysql -uroot characters < sql/base/characters_database.sql
+        mysql -uroot world < sql/base/dev/world_database.sql
         # run updates
         chmod +x contrib/check_updates.sh
         ./contrib/check_updates.sh auth 3.3.5 auth localhost
         ./contrib/check_updates.sh characters 3.3.5 characters localhost
-        cat sql/updates/world/3.3.5/*.sql | mysql -uroot -proot world
-        cat sql/custom/auth/*.sql | mysql -uroot -proot auth
-        cat sql/custom/characters/*.sql | mysql -uroot -proot characters
-        cat sql/custom/world/*.sql | mysql -uroot -proot world
+        cat sql/updates/world/3.3.5/*.sql | mysql -uroot world
+        cat sql/custom/auth/*.sql | mysql -uroot auth
+        cat sql/custom/characters/*.sql | mysql -uroot characters
+        cat sql/custom/world/*.sql | mysql -uroot world
 
     - name: Dependencies
       run: |
