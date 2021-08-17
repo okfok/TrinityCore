@@ -1,1 +1,3 @@
-# TrinityCore3.3.5
+# Automerger
+
+Automatically merges latest TrinityCore and pushes the result
