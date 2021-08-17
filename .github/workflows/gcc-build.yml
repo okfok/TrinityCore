@@ -12,11 +12,9 @@ jobs:
       matrix:
         branch: [3.3.5, transmog_3.3.5, transmogvendor_3.3.5, reforging_3.3.5, multivendor_3.3.5, multitrainer_3.3.5, playeritemgossip_3.3.5, dressnpcs_3.3.5, objscale_3.3.5, gomove_3.3.5]
         pch: [ON, OFF]
-        fetch_depth: [0]
     env:
       BRANCH: ${{ matrix.branch }}
       PCH: ${{ matrix.pch }}
-      DEPTH: ${{ matrix.fetch_depth }}
 
     runs-on: ubuntu-20.04
     steps:
@@ -24,6 +22,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: ${{ matrix.branch }}
+        fetch-depth: 0
 
     - name: Configure user
       run: |
