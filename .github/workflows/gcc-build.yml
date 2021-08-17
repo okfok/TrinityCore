@@ -21,11 +21,17 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ matrix.branch }}
+
+    - name: Configure user
+      run: |
+        git config user.email "rochet2@post.com" && git config user.name "Rochet2"
+
     - name: Merge TC
       run: |
-        git clone --branch=${BRANCH} https://github.com/Rochet2/TrinityCore.git .
         git status
-        git config user.email "rochet2@post.com" && git config user.name "Rochet2"
         git remote add Trinity https://github.com/TrinityCore/TrinityCore.git
         git fetch Trinity 3.3.5
         git merge -m "Merge TrinityCore 3.3.5 to ${BRANCH} [skip ci]" Trinity/3.3.5
@@ -80,4 +86,4 @@ jobs:
     - name: Push changes
       if: matrix.pch == 'ON'
       run: |
-        git push origin HEAD:${BRANCH}
+        git push
