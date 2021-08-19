@@ -38,6 +38,7 @@ jobs:
         git status
 
     - name: Check database
+      if: ${{ false }}
       run: |
         echo "start mysql"
         sudo systemctl start mysql.service
