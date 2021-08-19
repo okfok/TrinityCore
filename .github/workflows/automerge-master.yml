@@ -48,6 +48,8 @@ jobs:
 
     - name: Check database
       run: |
+        echo "start mysql"
+        sudo systemctl start mysql.service
         echo "remove user password"
         mysql -uroot -proot -e 'SET PASSWORD FOR root@localhost="";'
         echo "create databases"
