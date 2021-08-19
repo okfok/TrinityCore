@@ -36,12 +36,18 @@ jobs:
         git merge -m "Merge TrinityCore master to ${BRANCH} [skip ci]" Trinity/master
         git submodule update --init --recursive
         git status
+        
+    - name: Shutdown MySQL
+      run: sudo service mysql stop
+
+    - name: Set up MySQL 5.6
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql version: '5.6'
+        mysql root password: 'root'
 
     - name: Check database
-      if: ${{ false }}
       run: |
-        echo "start mysql"
-        sudo systemctl start mysql.service
         echo "remove user password"
         mysql -uroot -proot -e 'SET PASSWORD FOR root@localhost="";'
         echo "create databases"
@@ -64,13 +70,12 @@ jobs:
 
     - name: Dependencies
       run: |
-        sudo apt-get update && sudo apt-get install -yq libboost-all-dev g++-8
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+        sudo apt-get update && sudo apt-get install -yq libboost-all-dev clang-11
     - name: Setup
       run: |
         mkdir bin
         cd bin
-        cmake ../ -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=$PCH -DUSE_SCRIPTPCH=$PCH -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install -DBUILD_TESTING=1
+        cmake ../ -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=$PCH -DUSE_SCRIPTPCH=$PCH -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=0 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install -DCMAKE_C_COMPILER=clang-11 -DCMAKE_CXX_COMPILER=clang++-11
         cd ..
     - name: Build
       run: |
@@ -83,7 +88,7 @@ jobs:
     - name: Check executables
       run: |
         cd bin/check_install/bin
-        ./authserver --version
+        ./bnetserver --version
         ./worldserver --version
 
     - name: Push changes
