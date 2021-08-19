@@ -1,4 +1,4 @@
-name: GCC
+name: automerge-3.3.5
 
 on:
   push:
