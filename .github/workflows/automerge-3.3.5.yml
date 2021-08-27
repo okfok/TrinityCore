@@ -3,7 +3,7 @@ name: automerge-3.3.5
 on:
   push:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron:  '0 12 * * *'
 
 jobs:
   build:
