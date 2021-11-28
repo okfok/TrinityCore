@@ -65,7 +65,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: [3.3.5, transmog_3.3.5, transmogvendor_3.3.5, reforging_3.3.5, multivendor_3.3.5, multitrainer_3.3.5, playeritemgossip_3.3.5, dressnpcs_3.3.5, objscale_3.3.5, gomove_3.3.5]
+        branch: [3.3.5, transmog_3.3.5, transmog_legion_3.3.5, transmogvendor_3.3.5, reforging_3.3.5, multivendor_3.3.5, multitrainer_3.3.5, playeritemgossip_3.3.5, dressnpcs_3.3.5, objscale_3.3.5, gomove_3.3.5]
         pch: [ON, OFF]
     env:
       BRANCH: ${{ matrix.branch }}
