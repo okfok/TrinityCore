@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: [master, dressnpcs_master, gomove_master, multivendor_master, objscale_master, playeritemgossip_master]
+        branch: [master, dressnpcs_master, gomove_master, multivendor_master, objscale_master, playeritemgossip_master, master_fix_ci]
         pch: [ON, OFF]
     env:
       BRANCH: ${{ matrix.branch }}
