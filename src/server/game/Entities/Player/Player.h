@@ -30,6 +30,7 @@
 #include "PetDefines.h"
 #include "PlayerTaxi.h"
 #include "QuestDef.h"
+#include "Transmogrification.h"
 #include <memory>
 #include <queue>
 #include <unordered_set>
@@ -150,6 +151,16 @@ struct SpellModifier
     uint32 spellId;
     Aura* const ownerAura;
 };
+
+#ifdef PRESETS
+typedef std::map<uint8, uint32> PresetslotMapType;
+struct PresetData
+{
+    std::string name;
+    PresetslotMapType slotMap; // slotMap[slotId] = entry
+};
+typedef std::map<uint8, PresetData> PresetMapType;
+#endif
 
 typedef std::unordered_map<uint32, PlayerTalent*> PlayerTalentMap;
 typedef std::unordered_map<uint32, PlayerSpell> PlayerSpellMap;
@@ -926,7 +937,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         void SendInstanceResetWarning(uint32 mapid, Difficulty difficulty, uint32 time, bool welcome) const;
 
         bool CanInteractWithQuestGiver(Object* questGiver) const;
-        Creature* GetNPCIfCanInteractWith(ObjectGuid const& guid, uint32 npcflagmask) const;
+        Creature* GetNPCIfCanInteractWith(ObjectGuid const& guid, NPCFlags npcFlags) const;
         GameObject* GetGameObjectIfCanInteractWith(ObjectGuid const& guid) const;
         GameObject* GetGameObjectIfCanInteractWith(ObjectGuid const& guid, GameobjectTypes type) const;
 
@@ -996,8 +1007,8 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         uint32 GetTotalPlayedTime() const { return m_Played_time[PLAYED_TIME_TOTAL]; }
         uint32 GetLevelPlayedTime() const { return m_Played_time[PLAYED_TIME_LEVEL]; }
 
-        uint8 GetNativeGender() const override { return GetByteValue(PLAYER_BYTES_3, PLAYER_BYTES_3_OFFSET_GENDER); }
-        void SetNativeGender(uint8 gender) override { SetByteValue(PLAYER_BYTES_3, PLAYER_BYTES_3_OFFSET_GENDER, gender); }
+        Gender GetNativeGender() const override { return Gender(GetByteValue(PLAYER_BYTES_3, PLAYER_BYTES_3_OFFSET_GENDER)); }
+        void SetNativeGender(Gender gender) override { SetByteValue(PLAYER_BYTES_3, PLAYER_BYTES_3_OFFSET_GENDER, gender); }
         uint8 GetSkinId() const { return GetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_SKIN_ID); }
         void SetSkinId(uint8 skin) { SetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_SKIN_ID, skin); }
         uint8 GetFaceId() const { return GetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_FACE_ID); }
@@ -1969,7 +1980,20 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         /***               FLOOD FILTER SYSTEM                 ***/
         /*********************************************************/
 
-        void UpdateSpeakTime();
+        struct ChatFloodThrottle
+        {
+            enum Index
+            {
+                REGULAR = 0,
+                ADDON = 1,
+                MAX
+            };
+
+            time_t Time = 0;
+            uint32 Count = 0;
+        };
+
+        void UpdateSpeakTime(ChatFloodThrottle::Index index);
 
         /*********************************************************/
         /***                 VARIOUS SYSTEMS                   ***/
@@ -2116,7 +2140,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
         void SetMap(Map* map) override;
         void ResetMap() override;
 
-        bool isAllowedToLoot(Creature const* creature);
+        bool isAllowedToLoot(Creature const* creature) const;
 
         DeclinedName const* GetDeclinedNames() const { return m_declinedname; }
         uint8 GetRunesState() const { return m_runes->runeState; }
@@ -2179,6 +2203,10 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
 
         std::string GetMapAreaAndZoneString() const;
         std::string GetCoordsMapAreaAndZoneString() const;
+
+#ifdef PRESETS
+        PresetMapType presetMap; // presetMap[presetId] = presetData
+#endif
 
         std::string GetDebugInfo() const override;
 
@@ -2297,8 +2325,7 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
 
         uint32 m_team;
         uint32 m_nextSave;
-        time_t m_speakTime;
-        uint32 m_speakCount;
+        std::array<ChatFloodThrottle, ChatFloodThrottle::MAX> m_chatFloodData;
         Difficulty m_dungeonDifficulty;
         Difficulty m_raidDifficulty;
         Difficulty m_raidMapDifficulty;
