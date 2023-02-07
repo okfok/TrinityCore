@@ -2192,12 +2192,12 @@ void Player::RegenerateHealth()
     float addValue = 0.0f;
 
     // polymorphed case
-    if (IsPolymorphed())
-        addValue = float(GetMaxHealth()) / 3.0f;
+    //if (IsPolymorphed())
+    //    addValue = float(GetMaxHealth()) / 3.0f;
     // normal regen case (maybe partly in combat case)
-    else if (!IsInCombat() || HasAuraType(SPELL_AURA_MOD_REGEN_DURING_COMBAT))
-    {
-        addValue = OCTRegenHPPerSpirit() * HealthIncreaseRate;
+    //else if (!IsInCombat() || HasAuraType(SPELL_AURA_MOD_REGEN_DURING_COMBAT))
+    //{
+        //addValue = OCTRegenHPPerSpirit() * HealthIncreaseRate;
         if (!IsInCombat())
         {
             addValue *= GetTotalAuraMultiplier(SPELL_AURA_MOD_HEALTH_REGEN_PERCENT);
@@ -2209,11 +2209,11 @@ void Player::RegenerateHealth()
 
         if (!IsStandState())
             addValue *= 1.5f;
-    }
+    //}
 
     // always regeneration bonus (including combat)
     addValue += GetTotalAuraModifier(SPELL_AURA_MOD_HEALTH_REGEN_IN_COMBAT);
-    addValue += m_baseHealthRegen / 2.5f;
+    //addValue += m_baseHealthRegen / 2.5f;
 
     if (addValue < 0.0f)
         addValue = 0.0f;
