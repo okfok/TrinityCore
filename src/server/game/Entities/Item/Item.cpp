@@ -363,6 +363,7 @@ void Item::SaveToDB(CharacterDatabaseTransaction trans)
             stmt->setUInt32(++index, GetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME));
             stmt->setString(++index, m_text);
             stmt->setUInt32(++index, transmog);
+            stmt->setUInt32(++index, GetItemSuffixFactor());
             stmt->setUInt32(++index, guid);
 
             trans->Append(stmt);
@@ -472,8 +473,14 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
 
     SetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID, fields[7].GetInt16());
     // recalculate suffix factor
-    if (GetItemRandomPropertyId() < 0)
-        UpdateItemSuffixFactor();
+    if (GetItemRandomPropertyId() < 0) {
+        uint32 suffix_factor = fields[16].GetUInt32();
+        if (suffix_factor){
+            SetUInt32Value(ITEM_FIELD_PROPERTY_SEED, suffix_factor);
+        } else {
+            UpdateItemSuffixFactor();
+        }
+    }
 
     uint32 durability = fields[8].GetUInt16();
     SetUInt32Value(ITEM_FIELD_DURABILITY, durability);
