@@ -1,0 +1,2 @@
+UPDATE `world`.`trinity_string` SET `content_default` = 'Put item in first slot of bag and write .engrave <mark_id> <mark_lvl>' WHERE `entry` = 12000;
+UPDATE `auth`.`rbac_permissions` SET `name` = 'Command: engrave' WHERE `id` = 1001;
