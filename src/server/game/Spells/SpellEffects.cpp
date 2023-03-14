@@ -2561,33 +2561,50 @@ void Spell::EffectEnchantItemPerm()
         if (!enchant_id)
             return;
 
-        SpellItemEnchantmentEntry const* pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
-        if (!pEnchant)
-            return;
 
         // item can be in trade slot and have owner diff. from caster
         Player* item_owner = itemTarget->GetOwner();
         if (!item_owner)
             return;
 
-        if (item_owner != player && player->GetSession()->HasPermission(rbac::RBAC_PERM_LOG_GM_TRADE))
-        {
-            sLog->outCommand(player->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
-                player->GetName().c_str(), player->GetSession()->GetAccountId(),
-                itemTarget->GetTemplate()->Name1.c_str(), itemTarget->GetEntry(),
-                item_owner->GetName().c_str(), item_owner->GetSession()->GetAccountId());
+        if (item_owner != player && player->GetSession()->HasPermission(rbac::RBAC_PERM_LOG_GM_TRADE)) {
+            sLog->outCommand(player->GetSession()->GetAccountId(),
+                             "GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
+                             player->GetName().c_str(), player->GetSession()->GetAccountId(),
+                             itemTarget->GetTemplate()->Name1.c_str(), itemTarget->GetEntry(),
+                             item_owner->GetName().c_str(), item_owner->GetSession()->GetAccountId());
         }
 
-        // remove old enchanting before applying new if equipped
-        item_owner->ApplyEnchantment(itemTarget, PERM_ENCHANTMENT_SLOT, false);
+        if (enchant_id == 45) {
+            int32 randomPropId = effectInfo->MiscValueB;
 
-        itemTarget->SetEnchantment(PERM_ENCHANTMENT_SLOT, enchant_id, 0, 0, m_caster->GetGUID());
+            for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
+                item_owner->ApplyEnchantment(itemTarget, EnchantmentSlot(i), false);
 
-        // add new enchanting if equipped
-        item_owner->ApplyEnchantment(itemTarget, PERM_ENCHANTMENT_SLOT, true);
+            itemTarget->SetItemRandomProperties(randomPropId);
+            itemTarget->UpdateItemSuffixFactor();
 
-        item_owner->RemoveTradeableItem(itemTarget);
-        itemTarget->ClearSoulboundTradeable(item_owner);
+            for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
+                item_owner->ApplyEnchantment(itemTarget, EnchantmentSlot(i), true);
+
+        } else {
+
+            SpellItemEnchantmentEntry const *pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
+            if (!pEnchant)
+                return;
+
+
+            // remove old enchanting before applying new if equipped
+            item_owner->ApplyEnchantment(itemTarget, PERM_ENCHANTMENT_SLOT, false);
+
+            itemTarget->SetEnchantment(PERM_ENCHANTMENT_SLOT, enchant_id, 0, 0, m_caster->GetGUID());
+
+            // add new enchanting if equipped
+            item_owner->ApplyEnchantment(itemTarget, PERM_ENCHANTMENT_SLOT, true);
+
+            item_owner->RemoveTradeableItem(itemTarget);
+            itemTarget->ClearSoulboundTradeable(item_owner);
+        }
     }
 }
 
