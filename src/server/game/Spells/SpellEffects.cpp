@@ -2586,6 +2586,25 @@ void Spell::EffectEnchantItemPerm()
 
             for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
                 item_owner->ApplyEnchantment(itemTarget, EnchantmentSlot(i), true);
+        } else if (enchant_id == 46) {
+            uint32 cur_mark_lvl = itemTarget->GetItemSuffixFactor();
+            uint32 upd_mark_lvl = effectInfo->MiscValueB;
+            uint32 max_mark_lvl = GetMaxEnchSuffixFactor(itemTarget->GetEntry());
+
+            if (cur_mark_lvl >= max_mark_lvl)
+                return;
+
+
+            for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
+                item_owner->ApplyEnchantment(itemTarget, EnchantmentSlot(i), false);
+
+            if (cur_mark_lvl + upd_mark_lvl >= max_mark_lvl)
+                itemTarget->SetUInt32Value(ITEM_FIELD_PROPERTY_SEED, max_mark_lvl);
+            else
+                itemTarget->SetUInt32Value(ITEM_FIELD_PROPERTY_SEED, cur_mark_lvl + upd_mark_lvl);
+
+            for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
+                item_owner->ApplyEnchantment(itemTarget, EnchantmentSlot(i), true);
 
         } else {
 
