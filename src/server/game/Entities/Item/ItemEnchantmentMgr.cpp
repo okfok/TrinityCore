@@ -119,21 +119,27 @@ uint32 GetItemEnchantMod(int32 entry)
     return 0;
 }
 
-int32 GenerateItemRandomPropertyId(uint32 item_id)
+int32 GenerateItemRandomPropertyId(uint32 item_id, bool force)
 {
     ItemTemplate const* itemProto = sObjectMgr->GetItemTemplate(item_id);
 
     if (!itemProto)
         return 0;
 
+    uint32 random_sufix = itemProto->RandomSuffix;
+
     // item must have one from this field values not null if it can have random enchantments
-    if ((!itemProto->RandomProperty) && (!itemProto->RandomSuffix))
-        return 0;
+    if ((!itemProto->RandomProperty) && (!random_sufix)) {
+        if (force) {
+            random_sufix = 1;
+        } else
+            return 0;
+    }
 
     // item can have not null only one from field values
-    if ((itemProto->RandomProperty) && (itemProto->RandomSuffix))
+    if ((itemProto->RandomProperty) && (random_sufix))
     {
-        TC_LOG_ERROR("sql.sql", "Item template %u have RandomProperty == %u and RandomSuffix == %u, but must have one from field =0", itemProto->ItemId, itemProto->RandomProperty, itemProto->RandomSuffix);
+        TC_LOG_ERROR("sql.sql", "Item template %u have RandomProperty == %u and RandomSuffix == %u, but must have one from field =0", itemProto->ItemId, itemProto->RandomProperty, random_sufix);
         return 0;
     }
 
@@ -153,7 +159,7 @@ int32 GenerateItemRandomPropertyId(uint32 item_id)
     // RandomSuffix case
     else
     {
-        uint32 randomPropId = GetItemEnchantMod(itemProto->RandomSuffix);
+        uint32 randomPropId = GetItemEnchantMod(random_sufix);
         ItemRandomSuffixEntry const* random_id = sItemRandomSuffixStore.LookupEntry(randomPropId);
         if (!random_id)
         {
@@ -173,8 +179,24 @@ uint32 GenerateEnchSuffixFactor(uint32 item_id)
         return 0;
 //    if (!itemProto->RandomSuffix)
 //        return 0;
-
-    RandPropPointsEntry const* randomProperty = sRandPropPointsStore.LookupEntry((itemProto->ItemLevel <= 300)? itemProto->ItemLevel : 300);
+    RandPropPointsEntry const* randomProperty;
+    switch (itemProto->Quality)
+    {
+        case ITEM_QUALITY_POOR:
+        case ITEM_QUALITY_NORMAL:
+            randomProperty = sRandPropPointsStore.LookupEntry(30);
+            break;
+        case ITEM_QUALITY_UNCOMMON:
+        case ITEM_QUALITY_RARE:
+        case ITEM_QUALITY_EPIC:
+            randomProperty = sRandPropPointsStore.LookupEntry(60);
+            break;
+        case ITEM_QUALITY_LEGENDARY:
+            randomProperty = sRandPropPointsStore.LookupEntry(150);
+            break;
+        default:
+            return 0;
+    }
     if (!randomProperty)
         return 0;
 
@@ -223,6 +245,95 @@ uint32 GenerateEnchSuffixFactor(uint32 item_id)
     // Select rare/epic modifier
     switch (itemProto->Quality)
     {
+        case ITEM_QUALITY_POOR:
+        case ITEM_QUALITY_NORMAL:
+        case ITEM_QUALITY_UNCOMMON:
+            return randomProperty->Good[suffixFactor];
+        case ITEM_QUALITY_RARE:
+            return randomProperty->Superior[suffixFactor];
+        case ITEM_QUALITY_EPIC:
+        case ITEM_QUALITY_LEGENDARY:
+            return randomProperty->Epic[suffixFactor];
+        case ITEM_QUALITY_ARTIFACT:
+        default:
+            break;
+    }
+    return 0;
+}
+
+TC_GAME_API uint32 GetMaxEnchSuffixFactor(uint32 item_id){
+    ItemTemplate const* itemProto = sObjectMgr->GetItemTemplate(item_id);
+
+    if (!itemProto)
+        return 0;
+//    if (!itemProto->RandomSuffix)
+//        return 0;
+    RandPropPointsEntry const* randomProperty;
+    switch (itemProto->Quality)
+    {
+        case ITEM_QUALITY_POOR:
+        case ITEM_QUALITY_NORMAL:
+            randomProperty = sRandPropPointsStore.LookupEntry(150);
+            break;
+        case ITEM_QUALITY_UNCOMMON:
+        case ITEM_QUALITY_RARE:
+        case ITEM_QUALITY_EPIC:
+        case ITEM_QUALITY_LEGENDARY:
+            randomProperty = sRandPropPointsStore.LookupEntry(300);
+            break;
+        default:
+            return 0;
+    }
+    if (!randomProperty)
+        return 0;
+
+    uint32 suffixFactor;
+    switch (itemProto->InventoryType)
+    {
+        // Items of that type don`t have points
+        case INVTYPE_NON_EQUIP:
+        case INVTYPE_BAG:
+        case INVTYPE_AMMO:
+        case INVTYPE_QUIVER:
+            return 0;
+            // Select point coefficient
+        case INVTYPE_TABARD:
+        case INVTYPE_HEAD:
+        case INVTYPE_BODY:
+        case INVTYPE_CHEST:
+        case INVTYPE_LEGS:
+        case INVTYPE_2HWEAPON:
+        case INVTYPE_ROBE:
+        case INVTYPE_SHOULDERS:
+        case INVTYPE_WAIST:
+        case INVTYPE_FEET:
+        case INVTYPE_HANDS:
+        case INVTYPE_TRINKET:
+        case INVTYPE_NECK:
+        case INVTYPE_WRISTS:
+        case INVTYPE_FINGER:
+        case INVTYPE_CLOAK:
+            suffixFactor = 0;
+            break;
+        case INVTYPE_WEAPON:
+        case INVTYPE_WEAPONMAINHAND:
+        case INVTYPE_WEAPONOFFHAND:
+        case INVTYPE_SHIELD:
+        case INVTYPE_HOLDABLE:
+        case INVTYPE_RANGED:
+        case INVTYPE_THROWN:
+        case INVTYPE_RANGEDRIGHT:
+        case INVTYPE_RELIC:
+            suffixFactor = 2;
+            break;
+        default:
+            return 0;
+    }
+    // Select rare/epic modifier
+    switch (itemProto->Quality)
+    {
+        case ITEM_QUALITY_POOR:
+        case ITEM_QUALITY_NORMAL:
         case ITEM_QUALITY_UNCOMMON:
             return randomProperty->Good[suffixFactor];
         case ITEM_QUALITY_RARE:

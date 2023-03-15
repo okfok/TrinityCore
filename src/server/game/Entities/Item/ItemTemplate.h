@@ -710,6 +710,8 @@ struct TC_GAME_API ItemTemplate
     void InitializeQueryData();
     WorldPacket BuildQueryData(LocaleConstant loc) const;
 
+    bool isEquipable() const { return Class == ITEM_CLASS_WEAPON || Class == ITEM_CLASS_ARMOR; }
+
 private:
     // Cached info
     int32 _totalAP;

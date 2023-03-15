@@ -26,6 +26,7 @@
 #include "Player.h"
 #include "Random.h"
 #include "World.h"
+#include "Config.h"
 
  //
  // --------- LootItem ---------
@@ -44,8 +45,15 @@ LootItem::LootItem(LootStoreItem const& li)
 
     needs_quest = li.needs_quest;
 
+    randomPropertyId = GenerateItemRandomPropertyId(itemid,
+                                                    (
+                                                            rand_chance() <
+                                                            sConfigMgr->GetFloatDefault("Marks.MarkedDropChance", 0)
+                                                            &&
+                                                            proto->isEquipable()
+                                                    )
+    );
     randomSuffix = GenerateEnchSuffixFactor(itemid);
-    randomPropertyId = GenerateItemRandomPropertyId(itemid);
     count = 0;
     is_looted = 0;
     is_blocked = 0;
