@@ -2197,7 +2197,7 @@ void Player::RegenerateHealth()
     // normal regen case (maybe partly in combat case)
     //else if (!IsInCombat() || HasAuraType(SPELL_AURA_MOD_REGEN_DURING_COMBAT))
     //{
-        //addValue = OCTRegenHPPerSpirit() * HealthIncreaseRate;
+        addValue = OCTRegenHPPerSpirit() * HealthIncreaseRate;
         if (!IsInCombat())
         {
             addValue *= GetTotalAuraMultiplier(SPELL_AURA_MOD_HEALTH_REGEN_PERCENT);
