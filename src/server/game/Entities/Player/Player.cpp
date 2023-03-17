@@ -2539,8 +2539,8 @@ void Player::GiveXP(uint32 xp, Unit* victim, float group_rate)
     sScriptMgr->OnGivePlayerXP(this, xp, victim);
 
     // XP to money conversion processed in Player::RewardQuest
-    if (IsMaxLevel())
-        return;
+//    if (IsMaxLevel())
+//        return;
 
     uint32 bonus_xp;
     bool recruitAFriend = GetsRecruitAFriendBonus(true);
@@ -2556,7 +2556,7 @@ void Player::GiveXP(uint32 xp, Unit* victim, float group_rate)
     uint32 nextLvlXP = GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
     uint32 newXP = GetXP() + xp + bonus_xp;
 
-    while (newXP >= nextLvlXP && !IsMaxLevel())
+    while (newXP >= nextLvlXP && GetLevel() < 80)
     {
         newXP -= nextLvlXP;
 
@@ -2567,7 +2567,7 @@ void Player::GiveXP(uint32 xp, Unit* victim, float group_rate)
         nextLvlXP = GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
     }
 
-    SetXP(newXP);
+    SetXP((newXP <= 1000000000)? newXP : 1000000000);
 }
 
 // Update player to next level
