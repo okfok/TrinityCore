@@ -12,7 +12,7 @@ class item_xp_extractor : public ItemScript
 public:
     item_xp_extractor() : ItemScript("item_xp_extractor") { }
 
-    bool OnUse(Player* player, Item* item, SpellCastTargets const& /*targets*/) override
+    bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/) override
     {
         if (player->GetLevel() == 80 && player->GetXP() >= 10000){
             ItemPosCountVec dest;
