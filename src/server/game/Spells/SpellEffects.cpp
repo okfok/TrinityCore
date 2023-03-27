@@ -2606,6 +2606,8 @@ void Spell::EffectEnchantItemPerm()
             for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
                 item_owner->ApplyEnchantment(itemTarget, EnchantmentSlot(i), true);
 
+            itemTarget->SetState(ITEM_CHANGED, item_owner);
+
         } else {
 
             SpellItemEnchantmentEntry const *pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
