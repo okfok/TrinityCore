@@ -248,7 +248,7 @@ public:
                         auto it = player->presetMap.find(action);
                         if (it != player->presetMap.end())
                         {
-                            CharacterDatabase.PExecute("DELETE FROM `custom_transmogrification_sets` WHERE `Owner` = %u AND `PresetID` = %u", player->GetGUID().GetCounter(), uint32(action));
+                            CharacterDatabase.PExecute("DELETE FROM `custom_transmogrification_sets` WHERE `Owner` = {} AND `PresetID` = {}", player->GetGUID().GetCounter(), uint32(action));
                             player->presetMap.erase(it);
                         }
 
@@ -412,7 +412,7 @@ public:
                         std::ostringstream ss;
                         for (auto const & k_v : items)
                             ss << uint32(k_v.first) << ' ' << k_v.second << ' ';
-                        CharacterDatabase.PExecute("REPLACE INTO `custom_transmogrification_sets` (`Owner`, `PresetID`, `SetName`, `SetData`) VALUES (%u, %u, \"%s\", \"%s\")", player->GetGUID().GetCounter(), uint32(presetID), name.c_str(), ss.str().c_str());
+                        CharacterDatabase.PExecute("REPLACE INTO `custom_transmogrification_sets` (`Owner`, `PresetID`, `SetName`, `SetData`) VALUES ({}, {}, \"{}\", \"{}\")", player->GetGUID().GetCounter(), uint32(presetID), name, ss.str());
                     }
                 }
             }
