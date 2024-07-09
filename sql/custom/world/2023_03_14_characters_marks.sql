@@ -1,60 +1,71 @@
-UPDATE `world`.`trinity_string` SET `content_default` = 'Put item in first slot of bag and write .engrave <mark_id> <mark_lvl>' WHERE `entry` = 12000;
-UPDATE `auth`.`rbac_permissions` SET `name` = 'Command: engrave' WHERE `id` = 1001;
+REPLACE
+INTO `world`.`trinity_string`
+(`entry`, `content_default`)
+VALUES (12000, 'Put item in first slot of bag and write .engrave <mark_id> <mark_lvl>');
 
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 5;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 6;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 7;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 8;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 9;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 10;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 11;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 12;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 13;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 14;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 15;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 16;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 17;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 18;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 19;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 20;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 26;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 29;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 31;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 32;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 33;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 34;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 35;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 36;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 37;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 38;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 39;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 40;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 41;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 42;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 43;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 44;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 45;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 49;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 50;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 51;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 52;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 53;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 54;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 55;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 56;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 57;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 58;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 59;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 60;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 66;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 67;
+REPLACE
+    INTO `auth`.`rbac_permissions`
+    (`id`, `name`)
+VALUES (1001, 'Command: engrave');
 
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 88;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 89;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 90;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 91;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 92;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 93;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 99;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 100;
-UPDATE `world`.`item_enchantment_template` SET `chance` = 1 WHERE `entry` = 1 AND `ench` = 101;
+
+REPLACE INTO `world`.`item_enchantment_template`
+    (`entry`, `chance`, `ench`)
+VALUES (1, 1, 5),
+       (1, 1, 6),
+       (1, 1, 7),
+       (1, 1, 8),
+       (1, 1, 9),
+       (1, 1, 10),
+       (1, 1, 11),
+       (1, 1, 12),
+       (1, 1, 13),
+       (1, 1, 14),
+       (1, 1, 15),
+       (1, 1, 16),
+       (1, 1, 17),
+       (1, 1, 18),
+       (1, 1, 19),
+       (1, 1, 20),
+       (1, 1, 26),
+       (1, 1, 29),
+       (1, 1, 31),
+       (1, 1, 32),
+       (1, 1, 33),
+       (1, 1, 34),
+       (1, 1, 35),
+       (1, 1, 36),
+       (1, 1, 37),
+       (1, 1, 38),
+       (1, 1, 39),
+       (1, 1, 40),
+       (1, 1, 41),
+       (1, 1, 42),
+       (1, 1, 43),
+       (1, 1, 44),
+       (1, 1, 45),
+       (1, 1, 49),
+       (1, 1, 50),
+       (1, 1, 51),
+       (1, 1, 52),
+       (1, 1, 53),
+       (1, 1, 54),
+       (1, 1, 55),
+       (1, 1, 56),
+       (1, 1, 57),
+       (1, 1, 58),
+       (1, 1, 59),
+       (1, 1, 60),
+       (1, 1, 66),
+       (1, 1, 67),
+       (1, 1, 88),
+       (1, 1, 89),
+       (1, 1, 90),
+       (1, 1, 91),
+       (1, 1, 92),
+       (1, 1, 93),
+       (1, 1, 99),
+       (1, 1, 100),
+       (1, 1, 101);
+
+
